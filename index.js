@@ -3,6 +3,8 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const cors = require('cors');
 const ObjectId = require('mongodb').ObjectId;
 const port = process.env.PORT || 5000;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 const app = express()
 require('dotenv').config()
 app.use(cors())
@@ -10,7 +12,6 @@ app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.h6wi6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
@@ -18,6 +19,8 @@ async function run(){
     try{
         await client.connect()
         const restaurentMenu = client.db('restaurente').collection('restaurentMenu')
+
+        const registerUser = client.db('restaurente').collection('users')
 
         //menu item
 
@@ -32,7 +35,19 @@ async function run(){
             const result = await cursor.toArray();
             res.send(result)
         })
+        
+        //registerusers
 
+        app.post('/users',async(req,res)=> {
+            const hashedPassword = await bcrypt.hash(req.body.userPassword,10)
+            const order = {
+                name: req.body.userName,
+                email: req.body.userEmail,
+                password: hashedPassword
+            };
+            const result = await registerUser.insertOne(order)
+            res.send(result)
+        })
 
     }
     catch(error){}
