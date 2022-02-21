@@ -63,6 +63,7 @@ async function run(){
                         expiresIn: '10h'
                     })
                     res.send(token, 'login sucessful')
+                    console.log(token)
                 }
             }
         })
