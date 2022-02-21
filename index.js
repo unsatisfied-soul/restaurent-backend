@@ -49,6 +49,24 @@ async function run(){
             res.send(result)
         })
 
+        //loginuser
+        app.post('/login', async(req,res)=> {
+            const user = await registerUser.find({userEmail: req.body.userEmail})
+            if(user && user.length>0){
+                const isValidPassword = await bcrypt.compare(req.body.userPassword, user.userPassword)
+                if(isValidPassword){
+                    //generatetoken
+                    const token = jwt.sign({
+                        userEmail: user.userEmail,
+                        userId : user._id
+                    }, process.env.JWT_SECRET, {
+                        expiresIn: '10h'
+                    })
+                    res.send(token, 'login sucessful')
+                }
+            }
+        })
+
     }
     catch(error){}
     finally{}
