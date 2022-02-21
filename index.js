@@ -55,7 +55,11 @@ async function run(){
                 email: req.body.email
             })
             if(user){
-                return res.json({status: 'ok'})
+                const token = jwt.sign({
+                    name: user.name,
+                    email: user.email
+                },process.env.JWT_SECRET)
+                return res.json({status: token})
             }else{
                 return res.json({status: 'error'})
             }
