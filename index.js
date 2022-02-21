@@ -52,7 +52,7 @@ async function run(){
         //loginuser
         app.post('/login', async(req,res)=> {
             const user = await users.findOne({
-                email: req.body.userEmail
+                email: req.body.email
             })
             if(user){
                 return res.json({status: 'ok'})
