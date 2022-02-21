@@ -20,7 +20,7 @@ async function run(){
         await client.connect()
         const restaurentMenu = client.db('restaurente').collection('restaurentMenu')
 
-        const registerUser = client.db('restaurente').collection('users')
+        const users = client.db('restaurente').collection('users')
 
         //menu item
 
@@ -45,14 +45,21 @@ async function run(){
                 email: req.body.userEmail,
                 password: hashedPassword
             };
-            const result = await registerUser.insertOne(order)
+            const result = await users.insertOne(order)
             res.send(result)
         })
 
         //loginuser
         app.post('/login', async(req,res)=> {
-            const user = await registerUser.find({email: req.body.email})
-            res.send(user)
+            const user = await users.findOne({
+                email: req.body.email,
+                password: req.body.password
+            })
+            if(user){
+                return res.json({status: 'ok'})
+            }else{
+                return res.json({status: 'error'})
+            }
         })
 
     }
