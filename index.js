@@ -52,25 +52,7 @@ async function run(){
         //loginuser
         app.post('/login', async(req,res)=> {
             const user = await registerUser.find({email: req.body.email})
-            if(user && user.length>0){
-                const isValidPassword = await bcrypt.compare(req.body.password, user[0].password)
-                if(isValidPassword){
-                    //generatetoken
-                    const token = jwt.sign({
-                        email: user[0].email,
-                        userId : user[0]._id
-                    }, process.env.JWT_SECRET, {
-                        expiresIn: '10h'
-                    })
-                    res.send(token)
-                    console.log(token)
-                }
-            }
-            else{
-                res.status(401).json({
-                    "error": 'Authentication Failed'
-                })
-            }
+            res.send(user)
         })
 
     }
