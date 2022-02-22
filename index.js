@@ -59,7 +59,7 @@ async function run(){
                     name: user.name,
                     email: user.email
                 }, process.env.JWT_SECREAT)
-               res.send(token)
+               res.send({user:token})
             }else{
                 return res.json({status: 'error'})
             }
