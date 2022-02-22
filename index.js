@@ -55,6 +55,12 @@ async function run(){
                 email: req.body.email
             })
             if(user){
+                const isValidPassword = await bcrypt.compare(req.body.password, user.password)
+                if(isValidPassword){
+
+                }else{
+                    return res.json({status: 'please add valid password'})
+                }
                 const token = jwt.sign({
                     name: user.name,
                     email: user.email
