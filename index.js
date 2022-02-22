@@ -61,7 +61,7 @@ async function run(){
                         name: user.name,
                         email: user.email
                     }, process.env.JWT_SECREAT)
-                   res.send({user:token})
+                   res.send({user:token, name: user.name,userEmail: user.email})
                 }else{
                     return res.json({status: 'please add valid password'})
                 }
